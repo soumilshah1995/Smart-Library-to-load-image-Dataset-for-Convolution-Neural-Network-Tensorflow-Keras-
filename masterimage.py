@@ -65,7 +65,11 @@ class MasterImage(object):
             X_Data = np.asarray(self.x_data) / (255.0)      # Normalize Data
             Y_Data = np.asarray(self.y_data)
 
-            return X_Data,Y_Data
+            # reshape x_Data
+
+            X_Data = X_Data.reshape(-1, self.IMAGE_SIZE, self.IMAGE_SIZE, 1)
+
+            return X_Data, Y_Data
         except:
             print("Failed to run Function Process Image ")
 
@@ -74,24 +78,26 @@ class MasterImage(object):
         """
         :return: None Creates a Pickle Object of DataSet
         """
-
+        # Call the Function and Get the Data
         X_Data,Y_Data = self.Process_Image()
 
+        # Write the Entire Data into a Pickle File
         pickle_out = open('X_Data','wb')
         pickle.dump(X_Data, pickle_out)
         pickle_out.close()
 
+        # Write the Y Label Data
         pickle_out = open('Y_Data', 'wb')
         pickle.dump(Y_Data, pickle_out)
         pickle_out.close()
 
         print("Pickled Image Successfully ")
-
         return X_Data,Y_Data
 
     def load_dataset(self):
 
         try:
+            # Read the Data from Pickle Object
             X_Temp = open('X_Data','rb')
             X_Data = pickle.load(X_Temp)
 
@@ -111,7 +117,8 @@ class MasterImage(object):
 
 
 if __name__ == "__main__":
-    a = MasterImage(PATH='/Users/soumilshah/IdeaProjects/mytensorflow/Dataset/training_set',
+    path = '/Users/soumilshah/IdeaProjects/mytensorflow/Dataset/training_set'
+    a = MasterImage(PATH=path,
                     IMAGE_SIZE=80)
 
     X_Data,Y_Data = a.load_dataset()
